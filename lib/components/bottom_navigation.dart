@@ -67,7 +67,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             label: 'Post',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.album),
+            icon: Icon(Icons.photo),
             label: 'Album',
           ),
         ],

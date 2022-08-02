@@ -53,7 +53,7 @@ class UserInfoScreen extends StatelessWidget {
             ),
             _InfoContainer(
               category: 'CatchPhrase:',
-              value: user.company.catchPhrase,
+              value: ' "${user.company.catchPhrase}" ',
             ),
             _InfoContainer(
               category: 'Address:',
