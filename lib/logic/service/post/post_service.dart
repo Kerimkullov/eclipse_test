@@ -17,8 +17,6 @@ class PostService {
         return response.data.map<Post>((e) => Post.fromMap(e)).toList();
       }
       throw CatchException.convertException(response.statusMessage);
-    } on TypeError {
-      throw CatchException.convertException("Произошла системная ошибка");
     } catch (err) {
       throw CatchException.convertException(err);
     }
@@ -34,8 +32,6 @@ class PostService {
         return response.data.map<Comment>((e) => Comment.fromMap(e)).toList();
       }
       throw CatchException.convertException(response.statusMessage);
-    } on TypeError {
-      throw CatchException.convertException("Произошла системная ошибка");
     } catch (err) {
       throw CatchException.convertException(err);
     }
@@ -52,8 +48,6 @@ class PostService {
         return true;
       }
       throw CatchException.convertException(response.statusMessage);
-    } on TypeError {
-      throw CatchException.convertException("Произошла системная ошибка");
     } catch (err) {
       throw CatchException.convertException(err);
     }

@@ -16,8 +16,6 @@ class AlbumService {
         return response.data.map<Album>((e) => Album.fromMap(e)).toList();
       }
       throw CatchException.convertException(response.statusMessage);
-    } on TypeError {
-      throw CatchException.convertException("Произошла системная ошибка");
     } catch (err) {
       throw CatchException.convertException(err);
     }
@@ -33,8 +31,6 @@ class AlbumService {
         return response.data.map<Photos>((e) => Photos.fromMap(e)).toList();
       }
       throw CatchException.convertException(response.statusMessage);
-    } on TypeError {
-      throw CatchException.convertException("Произошла системная ошибка");
     } catch (err) {
       throw CatchException.convertException(err);
     }
