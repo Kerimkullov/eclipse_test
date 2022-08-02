@@ -1,6 +1,10 @@
+import 'package:eclipse_test/logic/bloc/album/album_bloc.dart';
+import 'package:eclipse_test/logic/bloc/post/post_bloc.dart';
+import 'package:eclipse_test/logic/bloc/user/user_bloc.dart';
 import 'package:eclipse_test/pages/album/album_screen.dart';
 import 'package:eclipse_test/pages/user/users_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../pages/post/post_screen.dart';
 
 class BottomNavigator extends StatefulWidget {
@@ -28,7 +32,27 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _widgetList.elementAt(_selectedIndex),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider<UserBloc>(
+            create: (BuildContext context) =>
+                UserBloc()..add(GetUserListEvent()),
+          ),
+          BlocProvider<PostBloc>(
+            create: (BuildContext context) => PostBloc()
+              ..add(
+                GetPostList(),
+              ),
+          ),
+          BlocProvider<AlbumBloc>(
+            create: (BuildContext context) => AlbumBloc()
+              ..add(
+                GetAlbumList(),
+              ),
+          ),
+        ],
+        child: _widgetList.elementAt(_selectedIndex),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,

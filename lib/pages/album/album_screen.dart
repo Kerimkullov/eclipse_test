@@ -6,17 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/text_extensions.dart';
 
-class AlbumScreen extends StatefulWidget {
+class AlbumScreen extends StatelessWidget {
   const AlbumScreen({Key? key}) : super(key: key);
 
-  @override
-  State<AlbumScreen> createState() => _AlbumScreenState();
-}
-
-class _AlbumScreenState extends State<AlbumScreen> {
-  final albumBloc = AlbumBloc();
-
-  void onTapAlbumCard(Album album) {
+  void onTapAlbumCard(Album album, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -25,13 +18,6 @@ class _AlbumScreenState extends State<AlbumScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    albumBloc.add(GetAlbumList());
-
-    super.initState();
   }
 
   @override
@@ -46,7 +32,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocBuilder<AlbumBloc, AlbumState>(
-            bloc: albumBloc,
+            bloc: context.read<AlbumBloc>(),
             builder: (context, state) {
               if (state is AlbumInitial) {
                 return const CircularProgressIndicator.adaptive();
@@ -60,7 +46,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
                     return Card(
                       child: ListTile(
-                        onTap: (() => onTapAlbumCard(album)),
+                        onTap: (() => onTapAlbumCard(album, context)),
                         title: Text(
                           album.title.capitalize(),
                           style: EclipseTextStyle.title,

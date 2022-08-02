@@ -8,24 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/text_extensions.dart';
 import '../../constants/eclipse_text_style.dart';
 
-class PostScreen extends StatefulWidget {
+class PostScreen extends StatelessWidget {
   const PostScreen({Key? key}) : super(key: key);
 
-  @override
-  State<PostScreen> createState() => _PostScreenState();
-}
-
-class _PostScreenState extends State<PostScreen> {
-  final postBloc = PostBloc();
-
-  @override
-  void initState() {
-    postBloc.add(GetPostList());
-
-    super.initState();
-  }
-
-  void onTapTop(Post post) {
+  void onTapTop(Post post, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -47,7 +33,7 @@ class _PostScreenState extends State<PostScreen> {
           padding: const EdgeInsets.all(8),
           child: Center(
               child: BlocBuilder<PostBloc, PostState>(
-            bloc: postBloc,
+            bloc: context.read<PostBloc>(),
             builder: (context, state) {
               if (state is PostInitial) {
                 return const CircularProgressIndicator.adaptive();
@@ -61,7 +47,7 @@ class _PostScreenState extends State<PostScreen> {
                     return Card(
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(16),
-                        onTap: (() => onTapTop(post)),
+                        onTap: (() => onTapTop(post, context)),
                         title: Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Text(

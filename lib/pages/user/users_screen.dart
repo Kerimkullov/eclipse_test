@@ -8,24 +8,10 @@ import '../../logic/bloc/user/user_bloc.dart';
 import '../../logic/models/user/user.dart';
 import '../../utils/text_extensions.dart';
 
-class UserScreen extends StatefulWidget {
+class UserScreen extends StatelessWidget {
   const UserScreen({Key? key}) : super(key: key);
 
-  @override
-  State<UserScreen> createState() => _UserScreenState();
-}
-
-class _UserScreenState extends State<UserScreen> {
-  final userBloc = UserBloc();
-
-  @override
-  void initState() {
-    userBloc.add(GetUserListEvent());
-
-    super.initState();
-  }
-
-  void onTapUserCard(User user) {
+  void onTapUserCard(User user, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -43,7 +29,7 @@ class _UserScreenState extends State<UserScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocBuilder<UserBloc, UserState>(
-            bloc: userBloc,
+            bloc: context.read<UserBloc>(),
             builder: (context, state) {
               if (state is UserInitial) {
                 return const CircularProgressIndicator.adaptive();
@@ -56,7 +42,7 @@ class _UserScreenState extends State<UserScreen> {
                     final user = state.userList[i];
                     return Card(
                       child: ListTile(
-                        onTap: (() => onTapUserCard(user)),
+                        onTap: (() => onTapUserCard(user, context)),
                         title: Text(
                           user.username.capitalize(),
                           style: EclipseTextStyle.title,
