@@ -1,7 +1,7 @@
 import 'package:eclipse_test/components/error_text_widget.dart';
 import 'package:eclipse_test/logic/bloc/post/post_bloc.dart';
 import 'package:eclipse_test/logic/models/post/post.dart';
-import 'package:eclipse_test/pages/post/post_detail.dart';
+import 'package:eclipse_test/pages/post/post_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,7 +29,7 @@ class _PostScreenState extends State<PostScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PostDetail(
+        builder: (context) => PostDetailScreen(
           post: post,
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:eclipse_test/constants/eclipse_text_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../logic/models/user/user.dart';
@@ -15,53 +16,87 @@ class UserInfoScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                SizedBox(height: 10),
-                Text('Name:'),
-                SizedBox(height: 10),
-                Text('Email:'),
-                SizedBox(height: 10),
-                Text('Phone'),
-                SizedBox(height: 10),
-                Text('Website'),
-                SizedBox(height: 10),
-                Text('Company'),
-                SizedBox(height: 10),
-                Text('Company bs'),
-                SizedBox(height: 10),
-                Text('CatchPhrase'),
-                SizedBox(height: 10),
-                Text('Address'),
-              ],
+            const CircleAvatar(
+              radius: 30,
+              child: Icon(
+                Icons.person,
+                size: 48,
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Text(user.name),
-                const SizedBox(height: 10),
-                Text(user.email),
-                const SizedBox(height: 10),
-                Text(user.phone),
-                const SizedBox(height: 10),
-                Text(user.website),
-                const SizedBox(height: 10),
-                Text(user.company.name),
-                const SizedBox(height: 10),
-                Text(user.company.bs),
-                const SizedBox(height: 10),
-                Text(user.company.catchPhrase),
-                const SizedBox(height: 10),
-                Text(user.address.city),
-              ],
+            const SizedBox(height: 10),
+            _InfoContainer(
+              category: 'Name:',
+              value: user.name,
+            ),
+            _InfoContainer(
+              category: 'Email:',
+              value: user.email,
+            ),
+            _InfoContainer(
+              category: 'Phone:',
+              value: user.phone,
+            ),
+            _InfoContainer(
+              category: 'Website:',
+              value: user.website,
+            ),
+            _InfoContainer(
+              category: 'Company:',
+              value: user.company.name,
+            ),
+            _InfoContainer(
+              category: 'Company BS:',
+              value: user.company.bs,
+            ),
+            _InfoContainer(
+              category: 'CatchPhrase:',
+              value: user.company.catchPhrase,
+            ),
+            _InfoContainer(
+              category: 'Address:',
+              value: user.address.toString(),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _InfoContainer extends StatelessWidget {
+  const _InfoContainer({
+    Key? key,
+    required this.category,
+    required this.value,
+  }) : super(key: key);
+
+  final String category;
+
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          InputDecorator(
+            decoration: InputDecoration(
+              labelText: category,
+              labelStyle: EclipseTextStyle.categoryTitle,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            child: Text(
+              value,
+              style: EclipseTextStyle.categoryValue,
+            ),
+          ),
+        ],
       ),
     );
   }

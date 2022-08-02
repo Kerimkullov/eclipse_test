@@ -29,9 +29,6 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
     final service = PostService();
 
-    emit(CreateCommentLoaded(
-        status: await service.createComment(event.comment, event.id)));
-
     emit(CommentLoaded(postComments: await service.getComments(event.id)));
   }
 }

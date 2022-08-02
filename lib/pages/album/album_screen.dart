@@ -43,35 +43,38 @@ class _AlbumScreenState extends State<AlbumScreen> {
         style: EclipseTextStyle.title,
       )),
       body: Center(
-        child: BlocBuilder<AlbumBloc, AlbumState>(
-          bloc: albumBloc,
-          builder: (context, state) {
-            if (state is AlbumInitial) {
-              return const CircularProgressIndicator.adaptive();
-            }
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BlocBuilder<AlbumBloc, AlbumState>(
+            bloc: albumBloc,
+            builder: (context, state) {
+              if (state is AlbumInitial) {
+                return const CircularProgressIndicator.adaptive();
+              }
 
-            if (state is AlbumLoaded) {
-              return ListView.separated(
-                itemCount: state.albumList.length,
-                itemBuilder: (context, i) {
-                  final album = state.albumList[i];
+              if (state is AlbumLoaded) {
+                return ListView.separated(
+                  itemCount: state.albumList.length,
+                  itemBuilder: (context, i) {
+                    final album = state.albumList[i];
 
-                  return Card(
-                    child: ListTile(
-                      onTap: (() => onTapAlbumCard(album)),
-                      title: Text(
-                        album.title.capitalize(),
-                        style: EclipseTextStyle.title,
+                    return Card(
+                      child: ListTile(
+                        onTap: (() => onTapAlbumCard(album)),
+                        title: Text(
+                          album.title.capitalize(),
+                          style: EclipseTextStyle.title,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                separatorBuilder: (_, i) => const SizedBox(height: 10),
-              );
-            }
+                    );
+                  },
+                  separatorBuilder: (_, i) => const SizedBox(height: 10),
+                );
+              }
 
-            return const Text('Проверьте интернет соединение');
-          },
+              return const Text('Проверьте интернет соединение');
+            },
+          ),
         ),
       ),
     );

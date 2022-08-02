@@ -9,16 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/bloc/comment/comment_bloc.dart';
 import "../../utils/text_extensions.dart";
 
-class PostDetail extends StatefulWidget {
-  const PostDetail({Key? key, required this.post}) : super(key: key);
+class PostDetailScreen extends StatefulWidget {
+  const PostDetailScreen({Key? key, required this.post}) : super(key: key);
 
   final Post post;
 
   @override
-  State<PostDetail> createState() => _PostDetailState();
+  State<PostDetailScreen> createState() => _PostDetailScreenState();
 }
 
-class _PostDetailState extends State<PostDetail> {
+class _PostDetailScreenState extends State<PostDetailScreen> {
   final commentBloc = CommentBloc();
 
   final nameController = TextEditingController();
@@ -87,6 +87,13 @@ class _PostDetailState extends State<PostDetail> {
   }
 
   @override
+  void initState() {
+    commentBloc.add(GetComments(id: widget.post.id));
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -114,11 +121,13 @@ class _PostDetailState extends State<PostDetail> {
             ),
             const SizedBox(height: 20),
             BlocConsumer<CommentBloc, CommentState>(
-              bloc: commentBloc..add(GetComments(id: widget.post.id)),
+              bloc: commentBloc,
               listener: (context, state) {
                 if (state is CreateCommentLoaded) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Comment posted')));
+
+                  commentBloc.add(GetComments(id: widget.post.id));
                 }
               },
               builder: (context, state) {
