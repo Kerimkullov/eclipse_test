@@ -29,7 +29,7 @@ class UserScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocBuilder<UserBloc, UserState>(
-            bloc: context.read<UserBloc>(),
+            bloc: UserBloc()..add(GetUserListEvent()),
             builder: (context, state) {
               if (state is UserInitial) {
                 return const CircularProgressIndicator.adaptive();

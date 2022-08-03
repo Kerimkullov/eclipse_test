@@ -1,3 +1,4 @@
+import 'package:eclipse_test/components/error_text_widget.dart';
 import 'package:eclipse_test/constants/eclipse_text_style.dart';
 import 'package:eclipse_test/logic/bloc/album/album_bloc.dart';
 import 'package:eclipse_test/logic/models/album/album.dart';
@@ -7,7 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/text_extensions.dart';
 
 class AlbumScreen extends StatelessWidget {
-  const AlbumScreen({Key? key}) : super(key: key);
+  const AlbumScreen({Key? key, required this.userId}) : super(key: key);
+
+  final int userId;
 
   void onTapAlbumCard(Album album, BuildContext context) {
     Navigator.push(
@@ -22,46 +25,38 @@ class AlbumScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-        'Album',
-        style: EclipseTextStyle.title,
-      )),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: BlocBuilder<AlbumBloc, AlbumState>(
-            bloc: context.read<AlbumBloc>(),
-            builder: (context, state) {
-              if (state is AlbumInitial) {
-                return const CircularProgressIndicator.adaptive();
-              }
+    return Center(
+      child: BlocBuilder<AlbumBloc, AlbumState>(
+        bloc: AlbumBloc()..add(GetAlbumList(userId: userId)),
+        builder: (context, state) {
+          if (state is AlbumInitial) {
+            return const CircularProgressIndicator.adaptive();
+          }
 
-              if (state is AlbumLoaded) {
-                return ListView.separated(
-                  itemCount: 3,
-                  itemBuilder: (context, i) {
-                    final album = state.albumList[i];
+          if (state is AlbumLoaded) {
+            return ListView.separated(
+              itemCount: 3,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                final album = state.albumList[i];
 
-                    return Card(
-                      child: ListTile(
-                        onTap: (() => onTapAlbumCard(album, context)),
-                        title: Text(
-                          album.title.capitalize(),
-                          style: EclipseTextStyle.title,
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, i) => const SizedBox(height: 10),
+                return Card(
+                  child: ListTile(
+                    onTap: (() => onTapAlbumCard(album, context)),
+                    title: Text(
+                      album.title.capitalize(),
+                      style: EclipseTextStyle.title,
+                    ),
+                  ),
                 );
-              }
+              },
+              separatorBuilder: (_, i) => const SizedBox(height: 10),
+            );
+          }
 
-              return const Text('Проверьте интернет соединение');
-            },
-          ),
-        ),
+          return const ErrorTextWidget();
+        },
       ),
     );
   }

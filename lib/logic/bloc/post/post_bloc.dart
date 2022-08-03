@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:eclipse_test/logic/service/post/post_service.dart';
+import '../../service/user_service.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/post/post.dart';
@@ -15,8 +15,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   void onGetPostList(GetPostList event, Emitter<PostState> emit) async {
     emit(PostInitial());
 
-    final service = PostService();
+    final service = UserService();
 
-    emit(PostListLoaded(postList: await service.getPostList()));
+    emit(PostListLoaded(postList: await service.getPostList(event.userId)));
   }
 }

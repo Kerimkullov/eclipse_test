@@ -1,3 +1,4 @@
+import 'package:eclipse_test/pages/user/users_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../components/bottom_navigation.dart';
@@ -18,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       () => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const BottomNavigator(),
+          builder: (context) => const UserScreen(),
         ),
         ((_) => false),
       ),

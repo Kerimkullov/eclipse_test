@@ -9,7 +9,9 @@ import '../../utils/text_extensions.dart';
 import '../../constants/eclipse_text_style.dart';
 
 class PostScreen extends StatelessWidget {
-  const PostScreen({Key? key}) : super(key: key);
+  const PostScreen({Key? key, required this.userId}) : super(key: key);
+
+  final int userId;
 
   void onTapTop(Post post, BuildContext context) {
     Navigator.push(
@@ -24,52 +26,45 @@ class PostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Posts'),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-              child: BlocBuilder<PostBloc, PostState>(
-            bloc: context.read<PostBloc>(),
-            builder: (context, state) {
-              if (state is PostInitial) {
-                return const CircularProgressIndicator.adaptive();
-              }
+    return Center(
+      child: BlocBuilder<PostBloc, PostState>(
+        bloc: PostBloc()..add(GetPostList(userId: userId)),
+        builder: (context, state) {
+          if (state is PostInitial) {
+            return const CircularProgressIndicator.adaptive();
+          }
 
-              if (state is PostListLoaded) {
-                return ListView.separated(
-                  itemCount: state.postList.length,
-                  itemBuilder: (context, i) {
-                    final post = state.postList[i];
-                    return Card(
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        onTap: (() => onTapTop(post, context)),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(
-                            post.title.capitalize(),
-                            style: EclipseTextStyle.title,
-                          ),
-                        ),
-                        subtitle: Text(
-                          post.body.capitalize(),
-                          style: EclipseTextStyle.subtitle,
-                        ),
+          if (state is PostListLoaded) {
+            return ListView.separated(
+              shrinkWrap: true,
+              itemCount: 3,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, i) {
+                final post = state.postList[i];
+                return Card(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    onTap: (() => onTapTop(post, context)),
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        post.title.capitalize(),
+                        style: EclipseTextStyle.title,
                       ),
-                    );
-                  },
-                  separatorBuilder: (_, i) => const SizedBox(height: 10),
+                    ),
+                    subtitle: Text(
+                      post.body.capitalize(),
+                      style: EclipseTextStyle.subtitle,
+                    ),
+                  ),
                 );
-              }
+              },
+              separatorBuilder: (_, i) => const SizedBox(height: 10),
+            );
+          }
 
-              return const ErrorTextWidget();
-            },
-          )),
-        ),
+          return const ErrorTextWidget();
+        },
       ),
     );
   }
