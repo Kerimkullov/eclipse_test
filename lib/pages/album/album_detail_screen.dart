@@ -75,9 +75,11 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                   imageUrl: photo.url,
                                 ),
                                 const SizedBox(height: 16),
-                                Text(
-                                  photo.title.capitalize(),
-                                  style: EclipseTextStyle.title,
+                                Expanded(
+                                  child: Text(
+                                    photo.title.capitalize(),
+                                    style: EclipseTextStyle.title,
+                                  ),
                                 ),
                               ],
                             ),

@@ -1,8 +1,6 @@
 import 'package:eclipse_test/pages/user/users_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../components/bottom_navigation.dart';
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
