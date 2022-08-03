@@ -15,8 +15,6 @@ class UserService {
         return response.data.map<User>((e) => User.fromMap(e)).toList();
       }
       throw CatchException.convertException(response.statusMessage);
-    } on TypeError {
-      throw CatchException.convertException("Произошла системная ошибка");
     } catch (err) {
       throw CatchException.convertException(err);
     }

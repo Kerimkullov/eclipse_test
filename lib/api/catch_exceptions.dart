@@ -22,21 +22,10 @@ class CatchException {
       } else if (error.response == null) {
         print('NO_INTERNET');
         return CatchException(message: 'Нет интернет соединения');
-      } else if (error.response!.statusCode == 400) {
-        // removeToken();
-        return CatchException(message: null);
-      } else if (error.response!.statusCode == 401) {
-        print("error.response!.statusCode - ${error.response!.statusCode}");
-
-        return CatchException(message: null);
-      } else if (error.response!.statusCode == 409) {
-        return CatchException(message: error.response!.data["message"]);
       } else if (error.type == DioErrorType.response) {
         print(
             "Error: ${error.response!.data["message"]}(code ${error.response!.statusCode})");
-        if (error.response!.statusCode == 500) {
-          return CatchException(message: error.response!.data["message"]);
-        }
+
         return CatchException(
             message:
                 "${error.response!.data["message"]}(code ${error.response!.statusCode})");

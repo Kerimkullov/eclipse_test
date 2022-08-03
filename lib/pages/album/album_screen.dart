@@ -40,7 +40,7 @@ class AlbumScreen extends StatelessWidget {
 
               if (state is AlbumLoaded) {
                 return ListView.separated(
-                  itemCount: state.albumList.length,
+                  itemCount: 3,
                   itemBuilder: (context, i) {
                     final album = state.albumList[i];
 
