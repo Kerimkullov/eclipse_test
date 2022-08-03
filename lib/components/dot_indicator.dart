@@ -15,15 +15,11 @@ class DotIndicator extends AnimatedWidget {
   /// The PageController that this DotsIndicator is representing.
   final PageController controller;
 
-  /// The number of items managed by the PageController
   final int itemCount;
 
   /// Called when a dot is tapped
   final ValueChanged<int> onPageSelected;
 
-  /// The color of the dots.
-  ///
-  /// Defaults to `Colors.white`.
   final Color color;
 
   // The base size of the dots
