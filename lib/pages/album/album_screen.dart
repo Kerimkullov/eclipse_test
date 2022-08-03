@@ -1,3 +1,4 @@
+import 'package:eclipse_test/components/error_text_widget.dart';
 import 'package:eclipse_test/constants/eclipse_text_style.dart';
 import 'package:eclipse_test/logic/bloc/album/album_bloc.dart';
 import 'package:eclipse_test/logic/models/album/album.dart';
@@ -6,17 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/text_extensions.dart';
 
-class AlbumScreen extends StatefulWidget {
-  const AlbumScreen({Key? key}) : super(key: key);
+class AlbumScreen extends StatelessWidget {
+  const AlbumScreen({Key? key, required this.userId}) : super(key: key);
 
-  @override
-  State<AlbumScreen> createState() => _AlbumScreenState();
-}
+  final int userId;
 
-class _AlbumScreenState extends State<AlbumScreen> {
-  final albumBloc = AlbumBloc();
-
-  void onTapAlbumCard(Album album) {
+  void onTapAlbumCard(Album album, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -28,51 +24,39 @@ class _AlbumScreenState extends State<AlbumScreen> {
   }
 
   @override
-  void initState() {
-    albumBloc.add(GetAlbumList());
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-        'Album',
-        style: EclipseTextStyle.title,
-      )),
-      body: Center(
-        child: BlocBuilder<AlbumBloc, AlbumState>(
-          bloc: albumBloc,
-          builder: (context, state) {
-            if (state is AlbumInitial) {
-              return const CircularProgressIndicator.adaptive();
-            }
+    return Center(
+      child: BlocBuilder<AlbumBloc, AlbumState>(
+        bloc: AlbumBloc()..add(GetAlbumList(userId: userId)),
+        builder: (context, state) {
+          if (state is AlbumInitial) {
+            return const CircularProgressIndicator.adaptive();
+          }
 
-            if (state is AlbumLoaded) {
-              return ListView.separated(
-                itemCount: state.albumList.length,
-                itemBuilder: (context, i) {
-                  final album = state.albumList[i];
+          if (state is AlbumLoaded) {
+            return ListView.separated(
+              itemCount: 3,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                final album = state.albumList[i];
 
-                  return Card(
-                    child: ListTile(
-                      onTap: (() => onTapAlbumCard(album)),
-                      title: Text(
-                        album.title.capitalize(),
-                        style: EclipseTextStyle.title,
-                      ),
+                return Card(
+                  child: ListTile(
+                    onTap: (() => onTapAlbumCard(album, context)),
+                    title: Text(
+                      album.title.capitalize(),
+                      style: EclipseTextStyle.title,
                     ),
-                  );
-                },
-                separatorBuilder: (_, i) => const SizedBox(height: 10),
-              );
-            }
+                  ),
+                );
+              },
+              separatorBuilder: (_, i) => const SizedBox(height: 10),
+            );
+          }
 
-            return const Text('Проверьте интернет соединение');
-          },
-        ),
+          return const ErrorTextWidget();
+        },
       ),
     );
   }

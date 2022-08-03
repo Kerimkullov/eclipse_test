@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eclipse_test/components/error_text_widget.dart';
 import 'package:eclipse_test/constants/eclipse_text_style.dart';
 import 'package:eclipse_test/logic/bloc/album/album_bloc.dart';
 import 'package:eclipse_test/logic/models/album/album.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../components/dot_indicator.dart';
 import '../../utils/text_extensions.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
@@ -20,6 +22,12 @@ class AlbumDetailScreen extends StatefulWidget {
 
 class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   final albumBloc = AlbumBloc();
+
+  final _controller = PageController();
+
+  static const _kDuration = Duration(milliseconds: 300);
+
+  static const _kCurve = Curves.ease;
 
   @override
   void initState() {
@@ -51,34 +59,60 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 return SizedBox(
                   height: MediaQuery.of(context).size.height / 2,
                   child: PageView.builder(
-                    itemCount: state.photosList.length,
+                    controller: _controller,
+                    itemCount: 10,
                     pageSnapping: true,
                     itemBuilder: (context, i) {
                       final photo = state.photosList[i];
 
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl: photo.url,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                photo.title.capitalize(),
-                                style: EclipseTextStyle.title,
-                              ),
-                            ],
+                      return Stack(children: [
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: photo.url,
+                                ),
+                                const SizedBox(height: 16),
+                                Expanded(
+                                  child: Text(
+                                    photo.title.capitalize(),
+                                    style: EclipseTextStyle.title,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
+                        Positioned(
+                          bottom: 80.0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Center(
+                              child: DotIndicator(
+                                controller: _controller,
+                                itemCount: 10,
+                                onPageSelected: (int page) {
+                                  _controller.animateToPage(
+                                    page,
+                                    duration: _kDuration,
+                                    curve: _kCurve,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]);
                     },
                   ),
                 );
               }
 
-              return const Text('data');
+              return const ErrorTextWidget();
             },
           ),
         ),

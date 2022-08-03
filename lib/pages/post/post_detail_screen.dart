@@ -1,89 +1,49 @@
 import 'package:eclipse_test/components/error_text_widget.dart';
 import 'package:eclipse_test/components/rounded_bottom_sheet.dart';
 import 'package:eclipse_test/constants/eclipse_text_style.dart';
-import 'package:eclipse_test/logic/models/post/create_comment.dart';
 import 'package:eclipse_test/logic/models/post/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../logic/bloc/comment/comment_bloc.dart';
 import "../../utils/text_extensions.dart";
+import 'create_comment_screen.dart';
 
-class PostDetail extends StatefulWidget {
-  const PostDetail({Key? key, required this.post}) : super(key: key);
+class PostDetailScreen extends StatefulWidget {
+  const PostDetailScreen({Key? key, required this.post}) : super(key: key);
 
   final Post post;
 
   @override
-  State<PostDetail> createState() => _PostDetailState();
+  State<PostDetailScreen> createState() => _PostDetailScreenState();
 }
 
-class _PostDetailState extends State<PostDetail> {
+class _PostDetailScreenState extends State<PostDetailScreen> {
   final commentBloc = CommentBloc();
-
-  final nameController = TextEditingController();
-
-  final emailController = TextEditingController();
-
-  final commentController = TextEditingController();
 
   void openBottomSheet() {
     showRoundedBottomSheet(
       context,
-      Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height / 1 / 2,
-          child: Column(
-            children: [
-              const TextField(
-                decoration: InputDecoration(
-                  label: Text('Name'),
-                ),
-                autofocus: true,
-              ),
-              const TextField(
-                decoration: InputDecoration(
-                  label: Text('Email'),
-                ),
-                autofocus: true,
-              ),
-              const TextField(
-                maxLines: 4,
-                decoration: InputDecoration(
-                  label: Text('Comment'),
-                ),
-                autofocus: true,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        commentBloc.add(CreateCommentEvent(
-                          comment: CreateComment(
-                              name: nameController.text,
-                              email: emailController.text,
-                              body: commentController.text),
-                          id: widget.post.id,
-                        ));
-
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Send')),
-                ],
-              )
-            ],
-          ),
+      BlocProvider.value(
+        value: commentBloc,
+        child: CreateCommentScreen(
+          id: widget.post.id,
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    commentBloc.add(GetComments(id: widget.post.id));
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    commentBloc.close();
+    super.dispose();
   }
 
   @override
@@ -114,11 +74,13 @@ class _PostDetailState extends State<PostDetail> {
             ),
             const SizedBox(height: 20),
             BlocConsumer<CommentBloc, CommentState>(
-              bloc: commentBloc..add(GetComments(id: widget.post.id)),
+              bloc: commentBloc,
               listener: (context, state) {
                 if (state is CreateCommentLoaded) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Comment posted')));
+
+                  commentBloc.add(GetComments(id: widget.post.id));
                 }
               },
               builder: (context, state) {

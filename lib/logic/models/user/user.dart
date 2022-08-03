@@ -139,7 +139,7 @@ class Address {
 
   @override
   String toString() {
-    return 'Address(street: $street, suite: $suite, city: $city, zipCode: $zipCode, geo: $geo)';
+    return '$street, $suite, $city, $zipCode, $geo)';
   }
 
   @override
